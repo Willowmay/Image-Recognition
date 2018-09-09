@@ -1,0 +1,822 @@
+
+# Load and Rename the datasets
+test_set <- read.csv(file = "~/Desktop/machine learning/final pj/MNIST-fashion testing set-49.csv") 
+train_set<- read.csv(file = "~/Desktop/machine learning/final pj/MNIST-fashion training set-49.csv")
+
+## Data Preperation
+
+# Explore the datasets
+sum(is.na(test_set)) 
+sum(is.na(train_set)) 
+table(train_set$label)
+table(test_set$label)
+str(train_set)
+str(test_set)
+
+# Sample size
+A1 <- 3600/60000
+A2 <- 6000/60000
+A3 <- 9000/60000
+train_set$label <- as.factor(train_set$label)
+test_set$label <- as.factor(test_set$label)
+
+### Model 1:  Multinomial logistic regression
+
+rep=3
+set.seed(31)
+acc1.1=dim(rep)
+for (k in 1:rep) {
+n <- nrow(train_set)
+## Sample size A1
+Index <- sample(1:n, size = round(A1*n), replace = FALSE)
+train1.1<- train_set[Index,]
+## Multinomial logistic regression
+model1.1 = multinom(label~.,data = train1.1)
+pred1.1 = predict(model1.1, test_set)
+acc1.1[k] = mean(pred1.1==test_set$label)
+}
+macc1.1=mean(acc1.1)
+
+set.seed(80)
+acc1.2=dim(rep)
+n <- nrow(train_set)
+for (k in 1:rep) {
+## Sample size A2
+Index <- sample(1:n, size = round(A1*n), replace = FALSE)
+train1.2<- train_set[Index,]
+## Multinomial logistic regression
+model1.2 <- multinom(label~.,data = train1.2)
+pred1.2 <- predict(model1.2, test_set)
+acc1.2[k]=mean(pred1.2==test_set$label)
+}
+macc1.2=mean(acc1.2)
+
+set.seed(80)
+acc1.2=dim(rep)
+n <- nrow(train_set)
+for (k in 1:rep) {
+## Sample size A2
+Index <- sample(1:n, size = round(A1*n), replace = FALSE)
+train1.2<- train_set[Index,]
+## Multinomial logistic regression
+model1.2 <- multinom(label~.,data = train1.2)
+pred1.2 <- predict(model1.2, test_set)
+acc1.2[k]=mean(pred1.2==test_set$label)
+}
+macc1.2=mean(acc1.2)
+
+rep=3
+set.seed(99)
+acc1.3 <- dim(rep)
+n <- nrow(train_set)
+for (k in 1:rep) {
+## Sample size A3
+Index <- sample(1:n, size = round(A1*n), replace = FALSE)
+train1.3 <- train_set[Index,]
+## Multinomial logistic regression
+model1.3  <- multinom(label~.,data = train1.3 )
+pred1.3  <- predict(model1.3 , test_set)
+acc1.3 [k] <- mean(pred1.3 ==test_set$label)
+}
+macc1.3 =mean(acc1.3)
+B1<- round(sum(macc1.1, macc1.2, macc1.3)/3,4)
+
+# Result
+model1_1 <- c("Multinomial logistic regression", nrow(train_set)*A1, A1, round(macc1.1,4), round((0.5*A1+(1-macc1.1)),4))
+model1_2 <- c("Multinomial logistic regression", nrow(train_set)*A2, A2, round(macc1.2,4), round((0.5*A2+(1-macc1.2)),4))
+model1_3 <- c("Multinomial logistic regression", nrow(train_set)*A3, A3, round(macc1.3,4), round((0.5*A3+(1-macc1.3)),4))
+r1 <- rbind(model1_1,model1_2,model1_3)
+colnames(r1) <-c("Model","Sample Size","A: Sample Size Proportion","B: Accuracy","Points")
+datatable(r1)
+
+### Model 2:  K-Nearest Neighbors
+when k=5
+
+# Sample size A1
+set.seed(17)
+n <- nrow(train_set)
+train2.1 <- train_set[sample(1:n, size = round(A1*n), replace = FALSE),]
+train2.2 <- train_set[sample(1:n, size = round(A1*n), replace = FALSE),]
+train2.3 <- train_set[sample(1:n, size = round(A1*n), replace = FALSE),]
+
+model2.1 <- knn(train2.1[,-1], test_set[,-1], train2.1$label, k=5) 
+acc2.1 <- mean(model2.1==test_set$label)
+model2.2 <- knn(train2.2[,-1], test_set[,-1], train2.2$label, k=5) 
+acc2.2 <- mean(model2.2==test_set$label)
+model2.3 <- knn(train2.3[,-1], test_set[,-1], train2.3$label, k=5) 
+acc2.3 <- mean(model2.3==test_set$label)
+
+res2.3 <- c(acc2.1, acc2.2, acc2.3)
+macc2.3 <- mean(res2.3)
+
+# Sample size A2
+set.seed(35)
+n <- nrow(train_set)
+train2.4 <- train_set[sample(1:n, size = round(A2*n), replace = FALSE),]
+train2.5 <- train_set[sample(1:n, size = round(A2*n), replace = FALSE),]
+train2.6 <- train_set[sample(1:n, size = round(A2*n), replace = FALSE),]
+
+model2.4 <- knn(train2.4[,-1], test_set[,-1], train2.4$label, k=5) 
+acc2.4 <- mean(model2.4==test_set$label)
+model2.5 <- knn(train2.5[,-1], test_set[,-1], train2.5$label, k=5) 
+acc2.5 <- mean(model2.5==test_set$label)
+model2.6 <- knn(train2.6[,-1], test_set[,-1], train2.6$label, k=5) 
+acc2.6 <- mean(model2.6==test_set$label)
+
+res2.6 <- c(acc2.4, acc2.5, acc2.6)
+macc2.6 <- mean(res2.6)
+
+# Sample size A3
+set.seed(135)
+n <- nrow(train_set)
+train2.7 <- train_set[sample(1:n, size = round(A3*n), replace = FALSE),]
+train2.8 <- train_set[sample(1:n, size = round(A3*n), replace = FALSE),]
+train2.9 <- train_set[sample(1:n, size = round(A3*n), replace = FALSE),]
+
+model2.7 <- knn(train2.7[,-1], test_set[,-1], train2.7$label, k=5) 
+acc2.7 <- mean(model2.7==test_set$label)
+model2.8 <- knn(train2.8[,-1], test_set[,-1], train2.8$label, k=5) 
+acc2.8 <- mean(model2.8==test_set$label)
+model2.9 <- knn(train2.9[,-1], test_set[,-1], train2.9$label, k=5) 
+acc2.9 <- mean(model2.9==test_set$label)
+
+res2.9 <- c(acc2.7, acc2.8, acc2.9)
+macc2.9 <- mean(res2.9)
+
+B2<- round(sum(macc2.9, macc2.6, macc2.3)/3,4)
+# Result
+model2_1 <- c(" K-Nearest Neighbors(k=5) ", nrow(train_set)*A1, A1, round(macc2.3,4), round((0.5*A1+(1-macc2.3)),4))
+model2_2 <- c(" K-Nearest Neighbors(k=5) ", nrow(train_set)*A2, A2, round(macc2.6,4), round((0.5*A2+(1-macc2.6)),4))
+model2_3 <- c(" K-Nearest Neighbors(k=5) ", nrow(train_set)*A3, A3, round(macc2.9,4), round((0.5*A3+(1-macc2.9)),4))
+r2 <- rbind(model2_1,model2_2,model2_3)
+colnames(r2) <-c("Model","Sample Size","A: Sample Size Proportion","B: Accuracy","Points")
+datatable(r2)
+
+
+### Model 3:   K-Nearest Neighbors
+
+k=6
+# Sample size A1
+set.seed(21)
+n <- nrow(train_set)
+train3.1 <- train_set[sample(1:n, size = round(A1*n), replace = FALSE),]
+train3.2 <- train_set[sample(1:n, size = round(A1*n), replace = FALSE),]
+train3.3 <- train_set[sample(1:n, size = round(A1*n), replace = FALSE),]
+
+model3.1 <- knn(train3.1[,-1], test_set[,-1], train3.1$label, k=6) 
+acc3.1 <- mean(model3.1==test_set$label)
+model3.2 <- knn(train3.2[,-1], test_set[,-1], train3.2$label, k=6) 
+acc3.2 <- mean(model3.2==test_set$label)
+model3.3 <- knn(train3.3[,-1], test_set[,-1], train3.3$label, k=6) 
+acc3.3 <- mean(model3.3==test_set$label)
+
+res3.3 <- c(acc3.1, acc3.2, acc3.3)
+macc3.3 <- mean(res3.3)
+
+# Sample size A2
+set.seed(311)
+n <- nrow(train_set)
+train3.4 <- train_set[sample(1:n, size = round(A2*n), replace = FALSE),]
+train3.5 <- train_set[sample(1:n, size = round(A2*n), replace = FALSE),]
+train3.6 <- train_set[sample(1:n, size = round(A2*n), replace = FALSE),]
+
+model3.4 <- knn(train3.4[,-1], test_set[,-1], train3.4$label, k=6) 
+acc3.4 <- mean(model3.4==test_set$label)
+model3.5 <- knn(train3.5[,-1], test_set[,-1], train3.5$label, k=6) 
+acc3.5 <- mean(model3.5==test_set$label)
+model3.6 <- knn(train3.6[,-1], test_set[,-1], train3.6$label, k=6) 
+acc3.6 <- mean(model3.6==test_set$label)
+
+res3.6 <- c(acc3.4, acc3.5, acc3.6)
+macc3.6 <- mean(res3.6)
+
+# Sample size A3
+set.seed(1)
+n <- nrow(train_set)
+train3.7 <- train_set[sample(1:n, size = round(A3*n), replace = FALSE),]
+train3.8 <- train_set[sample(1:n, size = round(A3*n), replace = FALSE),]
+train3.9 <- train_set[sample(1:n, size = round(A3*n), replace = FALSE),]
+
+model3.7 <- knn(train3.7[,-1], test_set[,-1], train3.7$label, k=6) 
+acc3.7 <- mean(model3.7==test_set$label)
+model3.8 <- knn(train3.8[,-1], test_set[,-1], train3.8$label, k=6) 
+acc3.8 <- mean(model3.8==test_set$label)
+model3.9 <- knn(train3.9[,-1], test_set[,-1], train3.9$label, k=6) 
+acc3.9 <- mean(model3.9==test_set$label)
+
+res3.9 <- c(acc3.7, acc3.8, acc3.9)
+macc3.9 <- mean(res3.9)
+B3<- round(sum(macc3.9, macc3.6, macc3.3)/3,4)
+# Result
+model3_1 <- c(" K-Nearest Neighbors(k=6) ", nrow(train_set)*A1, A1, round(macc3.3,4), round((0.5*A1+(1-macc3.3)),4))
+model3_2 <- c(" K-Nearest Neighbors(k=6) ", nrow(train_set)*A2, A2, round(macc3.6,4), round((0.5*A2+(1-macc3.6)),4))
+model3_3 <- c(" K-Nearest Neighbors(k=6)", nrow(train_set)*A3, A3, round(macc3.9,4), round((0.5*A3+(1-macc3.9)),4))
+r3 <- rbind(model3_1,model3_2,model3_3)
+colnames(r3) <-c("Model","Sample Size","A: Sample Size Proportion","B: Accuracy","Points")
+datatable(r3)
+
+set.seed(129)
+n <- nrow(train_set)
+Index <- sample(1:n, size = round(A1*n), replace = FALSE)
+train3.0 <- train_set[Index,]
+
+#Values of k to use
+k <- 1:10
+#Check number of k values
+num_k <- length(k)
+#Fitting models for 10 different k values
+train.acc <- numeric(num_k)
+
+for(i in 1:10){
+  knn.model<- knn(train3.0[,-1], test_set[,-1], train3.0$label, k=i, prob = F)
+  train.acc[i]<- mean(knn.model==test_set$label)
+}
+
+# Plot the accuracy rates on the testing set versus the value of k
+plot(k, train.acc, xlab='k', ylab='Accuracy Rates', col='orange', type='b')
+abline(v=k[which.max(train.acc)], col= "blue")
+
+
+### Model 4: Support Vector Machines
+kernel= "radial"
+
+# Sample size A1
+set.seed(12)
+n <- nrow(train_set)
+train4.1 <- train_set[sample(1:n, size = round(A1*n), replace = FALSE),]
+train4.2 <- train_set[sample(1:n, size = round(A1*n), replace = FALSE),]
+train4.3 <- train_set[sample(1:n, size = round(A1*n), replace = FALSE),]
+
+model4.1 <- svm(label~., data = train4.1, method="C-classification", kernel="radial") 
+pred4.1 <- predict(model4.1, test_set) 
+tab4.1 <- table(pred4.1,test_set$label)
+acc4.1 <- sum(diag(tab4.1))/sum(tab4.1)
+
+model4.2 <- svm(label~., data = train4.2, method="C-classification", kernel="radial") 
+pred4.2 <- predict(model4.2, test_set) 
+tab4.2 <- table(pred4.2,test_set$label)
+acc4.2 <- sum(diag(tab4.2))/sum(tab4.2)
+
+model4.3 <- svm(label~., data = train4.3, method="C-classification", kernel="radial") 
+pred4.3 <- predict(model4.3, test_set) 
+tab4.3 <- table(pred4.3,test_set$label)
+acc4.3 <- sum(diag(tab4.3))/sum(tab4.3)
+
+res4.3 <- c(acc4.1, acc4.2, acc4.3)
+macc4.3 <- mean(res4.3)
+
+# Sample size A2
+set.seed(35)
+n <- nrow(train_set)
+train4.4 <- train_set[sample(1:n, size = round(A2*n), replace = FALSE),]
+train4.5 <- train_set[sample(1:n, size = round(A2*n), replace = FALSE),]
+train4.6 <- train_set[sample(1:n, size = round(A2*n), replace = FALSE),]
+
+model4.4 <- svm(label~., data = train4.1, method="C-classification", kernel="radial") 
+pred4.4 <- predict(model4.4, test_set) 
+tab4.4 <- table(pred4.4,test_set$label)
+acc4.4 <- sum(diag(tab4.4))/sum(tab4.4)
+
+model4.5 <- svm(label~., data = train4.5, method="C-classification", kernel="radial") 
+pred4.5 <- predict(model4.5, test_set) 
+tab4.5 <- table(pred4.5,test_set$label)
+acc4.5 <- sum(diag(tab4.5))/sum(tab4.5)
+
+model4.6 <- svm(label~., data = train4.6, method="C-classification", kernel="radial") 
+pred4.6 <- predict(model4.6, test_set) 
+tab4.6 <- table(pred4.6,test_set$label)
+acc4.6 <- sum(diag(tab4.6))/sum(tab4.6)
+
+res4.6 <- c(acc4.4, acc4.5, acc4.6)
+macc4.6 <- mean(res4.6)
+
+# Sample size A3
+set.seed(29)
+n <- nrow(train_set)
+train4.7 <- train_set[sample(1:n, size = round(A3*n), replace = FALSE),]
+train4.8 <- train_set[sample(1:n, size = round(A3*n), replace = FALSE),]
+train4.9 <- train_set[sample(1:n, size = round(A3*n), replace = FALSE),]
+
+model4.7 <- svm(label~., data = train4.7, method="C-classification", kernel="radial") 
+pred4.7 <- predict(model4.7, test_set) 
+tab4.7 <- table(pred4.7,test_set$label)
+acc4.7 <- sum(diag(tab4.7))/sum(tab4.7)
+
+model4.8 <- svm(label~., data = train4.8, method="C-classification", kernel="radial") 
+pred4.8 <- predict(model4.8, test_set) 
+tab4.8 <- table(pred4.8,test_set$label)
+acc4.8 <- sum(diag(tab4.8))/sum(tab4.8)
+
+model4.9 <- svm(label~., data = train4.9, method="C-classification", kernel="radial") 
+pred4.9 <- predict(model4.9, test_set) 
+tab4.9 <- table(pred4.9,test_set$label)
+acc4.9 <- sum(diag(tab4.9))/sum(tab4.9)
+
+res4.9 <- c(acc4.7, acc4.8, acc4.9)
+macc4.9 <- mean(res4.9)
+B4<- round(sum(macc4.9, macc4.6, macc4.3)/3,4)
+# Result
+model4_1 <- c(" Support Vector Machines(radial)", nrow(train_set)*A1, A1, round(macc4.3,4), round((0.5*A1+(1-macc4.3)),4))
+model4_2 <- c(" Support Vector Machines(radial) ", nrow(train_set)*A2, A2, round(macc4.6,4), round((0.5*A2+(1-macc4.6)),4))
+model4_3 <- c(" Support Vector Machines(radial) ", nrow(train_set)*A3, A3, round(macc4.9,4), round((0.5*A3+(1-macc4.9)),4))
+r4 <- rbind(model4_1,model4_2,model4_3)
+colnames(r4) <-c("Model","Sample Size","A: Sample Size Proportion","B: Accuracy","Points")
+datatable(r4)
+
+### Model 5: Support Vector Machines
+kernel="polynomial"
+
+# Sample size A1
+set.seed(151)
+n <- nrow(train_set)
+train5.1<- train_set[sample(1:n, size = round(A1*n), replace = FALSE),]
+train5.2<- train_set[sample(1:n, size = round(A1*n), replace = FALSE),]
+train5.3<- train_set[sample(1:n, size = round(A1*n), replace = FALSE),]
+
+model5.1 <- svm(label~., data = train5.1, method="C-classification", kernel="polynomial") 
+pred5.1 <- predict(model5.1, test_set) 
+tab5.1 <- table(pred5.1,test_set$label)
+acc5.1 <- sum(diag(tab5.1))/sum(tab5.1)
+
+model5.2 <- svm(label~., data = train5.2, method="C-classification", kernel="polynomial") 
+pred5.2 <- predict(model5.2, test_set) 
+tab5.2 <- table(pred5.2,test_set$label)
+acc5.2 <- sum(diag(tab5.2))/sum(tab5.2)
+
+model5.3 <- svm(label~., data = train5.3, method="C-classification", kernel="polynomial") 
+pred5.3 <- predict(model5.3, test_set) 
+tab5.3 <- table(pred5.3,test_set$label)
+acc5.3 <- sum(diag(tab5.3))/sum(tab5.3)
+
+res5.3 <- c(acc5.1, acc5.2, acc5.3)
+macc5.3 <- mean(res5.3)
+
+# Sample size A2
+set.seed(111)
+n <- nrow(train_set)
+train5.4<- train_set[sample(1:n, size = round(A2*n), replace = FALSE),]
+train5.5<- train_set[sample(1:n, size = round(A2*n), replace = FALSE),]
+train5.6<- train_set[sample(1:n, size = round(A2*n), replace = FALSE),]
+
+model5.4 <- svm(label~., data = train5.4, method="C-classification", kernel="polynomial") 
+pred5.4 <- predict(model5.4, test_set) 
+tab5.4 <- table(pred5.4,test_set$label)
+acc5.4 <- sum(diag(tab5.4))/sum(tab5.4)
+
+model5.5 <- svm(label~., data = train5.5, method="C-classification", kernel="polynomial") 
+pred5.5 <- predict(model5.5, test_set) 
+tab5.5 <- table(pred5.5,test_set$label)
+acc5.5 <- sum(diag(tab5.5))/sum(tab5.5)
+
+model5.6 <- svm(label~., data = train5.6, method="C-classification", kernel="polynomial") 
+pred5.6 <- predict(model5.6, test_set) 
+tab5.6 <- table(pred5.6,test_set$label)
+acc5.6 <- sum(diag(tab5.6))/sum(tab5.6)
+
+res5.6 <- c(acc5.4, acc5.5, acc5.6)
+macc5.6 <- mean(res5.6)
+
+# Sample size A3
+set.seed(3)
+n <- nrow(train_set)
+train5.7<- train_set[sample(1:n, size = round(A3*n), replace = FALSE),]
+train5.8<- train_set[sample(1:n, size = round(A3*n), replace = FALSE),]
+train5.9<- train_set[sample(1:n, size = round(A3*n), replace = FALSE),]
+
+model5.7 <- svm(label~., data = train5.7, method="C-classification", kernel="polynomial") 
+pred5.7 <- predict(model5.7, test_set) 
+tab5.7 <- table(pred5.7,test_set$label)
+acc5.7 <- sum(diag(tab5.7))/sum(tab5.7)
+
+model5.8 <- svm(label~., data = train5.8, method="C-classification", kernel="polynomial") 
+pred5.8 <- predict(model5.8, test_set) 
+tab5.8 <- table(pred5.8,test_set$label)
+acc5.8 <- sum(diag(tab5.8))/sum(tab5.8)
+
+model5.9 <- svm(label~., data = train5.9, method="C-classification", kernel="polynomial") 
+pred5.9 <- predict(model5.9, test_set) 
+tab5.9 <- table(pred5.9,test_set$label)
+acc5.9 <- sum(diag(tab5.9))/sum(tab5.9)
+
+res5.9 <- c(acc5.7, acc5.8, acc5.9)
+macc5.9 <- mean(res5.9)
+B5 <- round(sum(macc5.9, macc5.6, macc5.3)/3,4)
+# Result
+model5_1 <- c(" Support Vector Machines(polynomial) ", nrow(train_set)*A1, A1, round(macc5.3,4), round((0.5*A1+(1-macc5.3)),4))
+model5_2 <- c(" Support Vector Machines(polynomial) ", nrow(train_set)*A2, A2, round(macc5.6,4), round((0.5*A2+(1-macc5.6)),4))
+model5_3 <- c(" Support Vector Machines(polynomial) ", nrow(train_set)*A3, A3, round(macc5.9,4), round((0.5*A3+(1-macc5.9)),4))
+r5 <- rbind(model5_1,model5_2,model5_3)
+colnames(r5) <-c("Model","Sample Size","A: Sample Size Proportion","B: Accuracy","Points")
+datatable(r5)
+
+### Model 6: Classification Tree
+
+# Sample size A1
+set.seed(16)
+n <- nrow(train_set)
+train6.1<- train_set[sample(1:n, size = round(A1*n), replace = FALSE),]
+train6.2<- train_set[sample(1:n, size = round(A1*n), replace = FALSE),]
+train6.3<- train_set[sample(1:n, size = round(A1*n), replace = FALSE),]
+
+model6.1 <- rpart(label~., data = train6.1, method = "class", control = rpart.control(cp = 0.0001))
+modelp6.1 <- prune(model6.1,cp=model6.1$cptable[which.min(model6.1$cptable[,"xerror"]),"CP"] )
+pred6.1 <- predict(modelp6.1, test_set, type = "class") 
+tab6.1 <- table(pred6.1,test_set$label)
+acc6.1 <- sum(diag(tab6.1))/sum(tab6.1)
+
+model6.2 <- rpart(label~., data = train6.2, method = "class",control = rpart.control(cp = 0.0001))
+modelp6.2 <- prune(model6.2,cp=model6.2$cptable[which.min(model6.2$cptable[,"xerror"]),"CP"] )
+pred6.2 <- predict(modelp6.2, test_set, type = "class") 
+tab6.2 <- table(pred6.2,test_set$label)
+acc6.2 <- sum(diag(tab6.2))/sum(tab6.2)
+
+model6.3 <- rpart(label~., data = train6.3, method = "class",control = rpart.control(cp = 0.0001))
+modelp6.3 <- prune(model6.3,cp=model6.3$cptable[which.min(model6.3$cptable[,"xerror"]),"CP"] )
+pred6.3 <- predict(modelp6.3, test_set, type = "class") 
+tab6.3 <- table(pred6.3,test_set$label)
+acc6.3 <- sum(diag(tab6.3))/sum(tab6.3)
+
+res6.3 <- c(acc6.1, acc6.2, acc6.3)
+macc6.3 <- mean(res6.3)
+
+# Sample size A2
+set.seed(116)
+n <- nrow(train_set)
+train6.4 <- train_set[sample(1:n, size = round(A2*n), replace = FALSE),]
+train6.5 <- train_set[sample(1:n, size = round(A2*n), replace = FALSE),]
+train6.6 <- train_set[sample(1:n, size = round(A2*n), replace = FALSE),]
+
+model6.4 <- rpart(label~., data = train6.4, method = "class", control = rpart.control(cp = 0.0001))
+modelp6.4 <- prune(model6.4,cp=model6.4$cptable[which.min(model6.4$cptable[,"xerror"]),"CP"] )
+pred6.4 <- predict(modelp6.4, test_set, type = "class") 
+tab6.4 <- table(pred6.4,test_set$label)
+acc6.4 <- sum(diag(tab6.4))/sum(tab6.4)
+
+model6.5 <- rpart(label~., data = train6.5, method = "class", control = rpart.control(cp = 0.0001))
+modelp6.5 <- prune(model6.5,cp=model6.5$cptable[which.min(model6.5$cptable[,"xerror"]),"CP"] )
+pred6.5 <- predict(modelp6.5, test_set, type = "class") 
+tab6.5 <- table(pred6.5,test_set$label)
+acc6.5 <- sum(diag(tab6.5))/sum(tab6.5)
+
+model6.6 <- rpart(label~., data = train6.6, method = "class", control = rpart.control(cp = 0.0001))
+modelp6.6 <- prune(model6.6,cp=model6.6$cptable[which.min(model6.6$cptable[,"xerror"]),"CP"] )
+pred6.6 <- predict(modelp6.6, test_set, type = "class") 
+tab6.6 <- table(pred6.6,test_set$label)
+acc6.6 <- sum(diag(tab6.6))/sum(tab6.6)
+
+res6.6 <- c(acc6.4, acc6.5, acc6.6)
+macc6.6 <- mean(res6.6)
+
+# Sample size A3
+set.seed(50)
+n <- nrow(train_set)
+train6.7 <- train_set[sample(1:n, size = round(A3*n), replace = FALSE),]
+train6.8 <- train_set[sample(1:n, size = round(A3*n), replace = FALSE),]
+train6.9 <- train_set[sample(1:n, size = round(A3*n), replace = FALSE),]
+
+model6.7 <- rpart(label~., data = train6.7, method = "class", control = rpart.control(cp = 0.0001))
+modelp6.7 <- prune(model6.7,cp=model6.7$cptable[which.min(model6.7$cptable[,"xerror"]),"CP"] )
+pred6.7 <- predict(modelp6.7, test_set, type = "class") 
+tab6.7 <- table(pred6.7,test_set$label)
+acc6.7 <- sum(diag(tab6.7))/sum(tab6.7)
+
+model6.8 <- rpart(label~., data = train6.8, method = "class", control = rpart.control(cp = 0.0001))
+modelp6.8 <- prune(model6.8,cp=model6.8$cptable[which.min(model6.8$cptable[,"xerror"]),"CP"] )
+pred6.8 <- predict(modelp6.8, test_set, type = "class") 
+tab6.8 <- table(pred6.8,test_set$label)
+acc6.8 <- sum(diag(tab6.8))/sum(tab6.8)
+
+model6.9 <- rpart(label~., data = train6.9, method = "class", control = rpart.control(cp = 0.0001))
+modelp6.9 <- prune(model6.9,cp=model6.9$cptable[which.min(model6.9$cptable[,"xerror"]),"CP"] )
+pred6.9 <- predict(modelp6.9, test_set, type = "class") 
+tab6.9 <- table(pred6.9,test_set$label)
+acc6.9 <- sum(diag(tab6.9))/sum(tab6.9)
+
+res6.9 <- c(acc6.7, acc6.8, acc6.9)
+macc6.9 <- mean(res6.9)
+B6 <- round(sum(macc6.9, macc6.6,macc6.3)/3,4)
+# Result
+model6_1 <- c("Classification Tree ", nrow(train_set)*A1, A1, round(macc6.3,4), round((0.5*A1+(1-macc6.3)),4))
+model6_2 <- c("Classification Tree", nrow(train_set)*A2, A2, round(macc6.6,4), round((0.5*A2+(1-macc6.6)),4))
+model6_3 <- c("Classification Tree", nrow(train_set)*A3, A3, round(macc6.9,4), round((0.5*A3+(1-macc6.9)),4))
+r6 <- rbind(model6_1,model6_2,model6_3)
+colnames(r6) <-c("Model","Sample Size","A: Sample Size Proportion","B: Accuracy","Points")
+datatable(r6)
+
+### Model 7: Random Forest 
+
+# Sample size A1
+set.seed(116)
+n <- nrow(train_set)
+Index <- sample(1:n, size = round(A1*n), replace = FALSE)
+train7.1<- train_set[sample(1:n, size = round(A1*n), replace = FALSE),]
+train7.2<- train_set[sample(1:n, size = round(A1*n), replace = FALSE),]
+train7.3<- train_set[sample(1:n, size = round(A1*n), replace = FALSE),]
+
+model7.1 <- randomForest(label~., data = train7.1, importance= TRUE)
+pred7.1 <- predict(model7.1, test_set) 
+acc7.1 <- mean(pred7.1==test_set$label)
+
+model7.2 <- randomForest(label~., data = train7.2, importance= TRUE)
+pred7.2 <- predict(model7.2, test_set) 
+acc7.2 <- mean(pred7.2==test_set$label)
+
+model7.3 <- randomForest(label~., data = train7.3, importance= TRUE)
+pred7.3 <- predict(model7.3, test_set) 
+acc7.3 <- mean(pred7.3==test_set$label)
+
+res7.3 <- c(acc7.1, acc7.2, acc7.3)
+macc7.3 <- mean(res7.3)
+
+# Sample size A2
+set.seed(255)
+n <- nrow(train_set)
+train7.4<- train_set[sample(1:n, size = round(A2*n), replace = FALSE),]
+train7.5<- train_set[sample(1:n, size = round(A2*n), replace = FALSE),]
+train7.6<- train_set[sample(1:n, size = round(A2*n), replace = FALSE),]
+
+model7.4 <- randomForest(label~., data = train7.4, importance= TRUE)
+pred7.4 <- predict(model7.4, test_set) 
+acc7.4 <- mean(pred7.4==test_set$label)
+
+model7.5 <- randomForest(label~., data = train7.5, importance= TRUE)
+pred7.5 <- predict(model7.5, test_set) 
+acc7.5 <- mean(pred7.5==test_set$label)
+
+model7.6 <- randomForest(label~., data = train7.6, importance= TRUE)
+pred7.6 <- predict(model7.6, test_set) 
+acc7.6 <- mean(pred7.6==test_set$label)
+
+res7.6 <- c(acc7.4, acc7.5, acc7.6)
+macc7.6 <- mean(res7.6)
+
+# Sample size A3
+set.seed(45)
+n <- nrow(train_set)
+train7.7<- train_set[sample(1:n, size = round(A3*n), replace = FALSE),]
+train7.8<- train_set[sample(1:n, size = round(A3*n), replace = FALSE),]
+train7.9<- train_set[sample(1:n, size = round(A3*n), replace = FALSE),]
+
+model7.7 <- randomForest(label~., data = train7.7, importance= TRUE)
+pred7.7 <- predict(model7.7, test_set) 
+acc7.7 <- mean(pred7.7==test_set$label)
+
+model7.8 <- randomForest(label~., data = train7.8, importance= TRUE)
+pred7.8 <- predict(model7.8, test_set) 
+acc7.8 <- mean(pred7.8==test_set$label)
+
+model7.9 <- randomForest(label~., data = train7.9, importance= TRUE)
+pred7.9 <- predict(model7.9, test_set) 
+acc7.9 <- mean(pred7.9==test_set$label)
+
+res7.9 <- c(acc7.7, acc7.8, acc7.9)
+macc7.9 <- mean(res7.9)
+B7 <- round(sum(macc7.9, macc7.6, macc7.3)/3,4)
+# Result
+model7_1 <- c(" Random Forest ", nrow(train_set)*A1, A1, round(macc7.3,4), round((0.5*A1+(1-macc7.3)),4))
+model7_2 <- c(" Random Forest ", nrow(train_set)*A2, A2, round(macc7.6,4), round((0.5*A2+(1-macc7.6)),4))
+model7_3 <- c(" Random Forest ", nrow(train_set)*A3, A3, round(macc7.9,4), round((0.5*A3+(1-macc7.9)),4))
+r7 <- rbind(model7_1,model7_2,model7_3)
+colnames(r7) <-c("Model","Sample Size","A: Sample Size Proportion","B: Accuracy","Points")
+datatable(r7)
+
+
+### Model 8: Neural Networks
+
+rep=3
+set.seed(105)
+acc8.1=dim(rep)
+for (k in 1:rep) {
+n <- nrow(train_set)
+## Sample size A1
+Index <- sample(1:n, size = round(A1*n), replace = FALSE)
+train8.1<- train_set[Index,]
+## Neural Networks
+model8.1<-nnet(label~.,train8.1, size=25, MaxNWts=1510)
+pred8.1 <- predict(model8.1, test_set, type="class")
+tab8.1<- table(pred8.1,test_set$label)
+acc8.1[k]<- sum(diag(tab8.1)/sum(tab8.1))
+}
+macc8.1 <- mean(acc8.1)
+
+rep=3
+set.seed(107)
+acc8.2=dim(rep)
+for (k in 1:rep) {
+n <- nrow(train_set)
+## Sample size A1
+Index <- sample(1:n, size = round(A2*n), replace = FALSE)
+train8.2<- train_set[Index,]
+## Neural Networks
+model8.2<-nnet(label~.,train8.2, size=25, MaxNWts=1510)
+pred8.2 <- predict(model8.2, test_set, type="class")
+tab8.2<- table(pred8.2,test_set$label)
+acc8.2[k]=sum(diag(tab8.2)/sum(tab8.2))
+}
+macc8.2=mean(acc8.2)
+
+set.seed(1999)
+acc8.3=dim(rep)
+for (k in 1:rep) {
+n <- nrow(train_set)
+## Sample size A3
+Index <- sample(1:n, size = round(A3*n), replace = FALSE)
+train8.3<- train_set[Index,]
+## Neural Networks
+model8.3<-nnet(label~.,train8.3, size=25, MaxNWts=1510)
+pred8.3 <- predict(model8.3, test_set, type="class")
+tab8.3<- table(pred8.3,test_set$label)
+acc8.3[k]=sum(diag(tab8.3)/sum(tab8.3))
+}
+macc8.3=mean(acc8.3)
+B8 <- round(sum(macc8.1, macc8.2, macc8.3)/3, 4)
+# Result
+model8_1 <- c("Neural Networks", nrow(train_set)*A1, A1, round(macc8.1,4), round((0.5*A1+(1-macc8.1)),4))
+model8_2 <- c("Neural Networks", nrow(train_set)*A2, A2, round(macc8.2,4), round((0.5*A2+(1-macc8.2)),4))
+model8_3 <- c("Neural Networks", nrow(train_set)*A3, A3, round(macc8.3,4), round((0.5*A3+(1-macc8.3)),4))
+r8 <- rbind(model8_1,model8_2,model8_3)
+colnames(r8) <-c("Model","Sample Size","A: Sample Size Proportion","B: Accuracy","Points")
+datatable(r8)
+
+### Model 9: Linear Discriminant Analysis
+
+rep=3
+set.seed(123)
+acc9.1=dim(rep)
+for (k in 1:rep) {
+n <- nrow(train_set)
+## Sample size A1
+Index <- sample(1:n, size = round(A1*n), replace = FALSE)
+train9.1<- train_set[Index,]
+## linear discriminant analysis
+model9.1 <- lda(label~.,data = train9.1)
+pred9.1 <- predict(model9.1, test_set)
+tab9.1 <- table(pred9.1$class,test_set$label)
+acc9.1[k]=sum(diag(tab9.1)/sum(tab9.1))
+}
+macc9.1=mean(acc9.1)
+
+rep=3
+set.seed(321)
+acc9.2=dim(rep)
+for (k in 1:rep) {
+n <- nrow(train_set)
+## Sample size A2
+Index <- sample(1:n, size = round(A2*n), replace = FALSE)
+train9.2<- train_set[Index,]
+## linear discriminant analysis
+model9.2 <- lda(label~.,data = train9.2)
+pred9.2 <- predict(model9.2, test_set)
+tab9.2 <- table(pred9.2$class,test_set$label)
+acc9.2[k]=sum(diag(tab9.2)/sum(tab9.2))
+}
+macc9.2=mean(acc9.2)
+
+rep=3
+set.seed(301)
+acc9.3=dim(rep)
+for (k in 1:rep) {
+n <- nrow(train_set)
+## Sample size A3
+Index <- sample(1:n, size = round(A3*n), replace = FALSE)
+train9.3<- train_set[Index,]
+## linear discriminant analysis
+model9.3 <- lda(label~.,data = train9.3)
+pred9.3 <- predict(model9.3, test_set)
+tab9.3 <- table(pred9.3$class,test_set$label)
+acc9.3[k]=sum(diag(tab9.3)/sum(tab9.3))
+}
+macc9.3<- mean(acc9.3)
+B9 <- round(sum(macc9.1, macc9.2, macc9.3)/3,4)
+# Result
+model9_1 <- c("Linear Discriminant Analysis", nrow(train_set)*A1, A1, round(macc9.1,4), round((0.5*A1+(1-macc9.1)),4))
+model9_2 <- c("Linear Discriminant Analysis", nrow(train_set)*A2, A2, round(macc9.2,4), round((0.5*A2+(1-macc9.2)),4))
+model9_3 <- c("Linear Discriminant Analysis", nrow(train_set)*A3, A3, round(macc9.3,4), round((0.5*A3+(1-macc9.3)),4))
+r9 <- rbind(model9_1,model9_2,model9_3)
+colnames(r9) <-c("Model","Sample Size","A: Sample Size Proportion","B: Accuracy","Points")
+datatable(r9)
+
+
+### Model 10: Ensembling Model
+
+# Sample Size A1
+# knn
+pred10.1kn <- as.numeric(as.factor(model3.1))-1
+pred10.2kn <- as.numeric(as.factor(model3.2))-1
+pred10.3kn <- as.numeric(as.factor(model3.3))-1
+# svr
+pred10.1sv <- as.numeric(as.factor(pred4.1))-1
+pred10.2sv <- as.numeric(as.factor(pred4.2))-1
+pred10.3sv <- as.numeric(as.factor(pred4.3))-1
+# classification tree
+pred10.1ct <- as.numeric(as.factor(pred6.1))-1
+pred10.2ct <- as.numeric(as.factor(pred6.2))-1
+pred10.3ct <- as.numeric(as.factor(pred6.3))-1
+# random forest
+pred10.1rf <- as.numeric(as.factor(pred7.1))-1
+pred10.2rf <- as.numeric(as.factor(pred7.2))-1
+pred10.3rf <- as.numeric(as.factor(pred7.3))-1
+# weighted average
+pred10.1 <- data.frame(round(pred10.1rf*0.5+pred10.1sv*0.3+pred10.1kn*0.15+pred10.1ct*0.05))
+pred10.2 <- data.frame(round(pred10.2rf*0.5+pred10.2sv*0.3+pred10.2kn*0.15+pred10.2ct*0.05))
+pred10.3 <- data.frame(round(pred10.3rf*0.5+pred10.3sv*0.3+pred10.3kn*0.15+pred10.3ct*0.05))
+# Covert factor in testset into number
+test_nu <- data.frame(as.numeric(as.factor(test_set$label))-1)
+colnames(test_nu)<-c("label")
+test10 <- cbind(test_nu, test_set[,-1]) # Test set after converting
+# Accuracy
+acc10.1 <- mean(pred10.1==test10$label)
+acc10.2 <- mean(pred10.2==test10$label)
+acc10.3 <- mean(pred10.3==test10$label)
+res10.3 <- c(acc10.1, acc10.2, acc10.3)
+macc10.1 <- mean(res10.3)
+
+# Sample Size A2
+# knn
+pred10.4kn <- as.numeric(as.factor(model3.4))-1
+pred10.5kn <- as.numeric(as.factor(model3.5))-1
+pred10.6kn <- as.numeric(as.factor(model3.6))-1
+# svr
+pred10.4sv <- as.numeric(as.factor(pred4.4))-1
+pred10.5sv <- as.numeric(as.factor(pred4.5))-1
+pred10.6sv <- as.numeric(as.factor(pred4.6))-1
+# classification tree
+pred10.4ct <- as.numeric(as.factor(pred6.4))-1
+pred10.5ct <- as.numeric(as.factor(pred6.5))-1
+pred10.6ct <- as.numeric(as.factor(pred6.6))-1
+# random forest
+pred10.4rf <- as.numeric(as.factor(pred7.4))-1
+pred10.5rf <- as.numeric(as.factor(pred7.5))-1
+pred10.6rf <- as.numeric(as.factor(pred7.6))-1
+# weighted average
+pred10.4 <- data.frame(round(pred10.4rf*0.5+pred10.4sv*0.3+pred10.4kn*0.15+pred10.4ct*0.05))
+pred10.5 <- data.frame(round(pred10.5rf*0.5+pred10.5sv*0.3+pred10.5kn*0.15+pred10.5ct*0.05))
+pred10.6 <- data.frame(round(pred10.6rf*0.5+pred10.6sv*0.3+pred10.6kn*0.15+pred10.6ct*0.05))
+# Accuracy
+acc10.4 <- mean(pred10.4==test10$label)
+acc10.5 <- mean(pred10.5==test10$label)
+acc10.6 <- mean(pred10.6==test10$label)
+res10.6 <- c(acc10.4, acc10.5, acc10.6)
+macc10.2 <- mean(res10.6)
+
+# Sample Size A3
+# knn
+pred10.7kn <- as.numeric(as.factor(model3.7))-1
+pred10.8kn <- as.numeric(as.factor(model3.8))-1
+pred10.9kn <- as.numeric(as.factor(model3.9))-1
+# svr
+pred10.7sv <- as.numeric(as.factor(pred4.7))-1
+pred10.8sv <- as.numeric(as.factor(pred4.8))-1
+pred10.9sv <- as.numeric(as.factor(pred4.9))-1
+# classification tree
+pred10.7ct <- as.numeric(as.factor(pred6.7))-1
+pred10.8ct <- as.numeric(as.factor(pred6.8))-1
+pred10.9ct <- as.numeric(as.factor(pred6.9))-1
+# random forest
+pred10.7rf <- as.numeric(as.factor(pred7.7))-1
+pred10.8rf <- as.numeric(as.factor(pred7.8))-1
+pred10.9rf <- as.numeric(as.factor(pred7.9))-1
+# weighted average
+pred10.7 <- data.frame(round(pred10.7rf*0.5+pred10.7sv*0.3+pred10.7kn*0.15+pred10.7ct*0.05))
+pred10.8 <- data.frame(round(pred10.8rf*0.5+pred10.8sv*0.3+pred10.8kn*0.15+pred10.8ct*0.05))
+pred10.9 <- data.frame(round(pred10.9rf*0.5+pred10.9sv*0.3+pred10.9kn*0.15+pred10.9ct*0.05))
+# Accuracy
+acc10.7 <- mean(pred10.7==test10$label)
+acc10.8 <- mean(pred10.8==test10$label)
+acc10.9 <- mean(pred10.9==test10$label)
+res10.9 <- c(acc10.7, acc10.8, acc10.9)
+macc10.3 <- mean(res10.9)
+B10 <- round(sum(macc10.1,macc10.2, macc10.3)/3,4)
+# Result
+model10_1 <- c("Esemble Model", nrow(train_set)*A1, A1, round(macc10.1,4), round((0.5*A1+(1-macc10.1)),4))
+model10_2 <- c("Esemble Model", nrow(train_set)*A2, A2, round(macc10.2,4), round((0.5*A2+(1-macc10.2)),4))
+model10_3 <- c("Esemble Model", nrow(train_set)*A3, A3, round(macc10.3,4), round((0.5*A3+(1-macc10.3)),4))
+r10 <- rbind(model10_1,model10_2,model10_3)
+colnames(r10) <-c("Model","Sample Size","A: Sample Size Proportion","B: Accuracy","Points")
+datatable(r10)
+
+## Scoreboard
+row<- rbind(r1,r2,r3,r4,r5,r6,r7,r8,r9,r10)
+colnames(row)<-c("Model","Sample Size","A: Sample Size Proportion","B: Accuracy","Points")
+datatable(row)
+
+
+## Discussion
+
+# Each Model's Mean Accuracy
+B <- rbind(B1,B2,B3, B4, B5, B6, B7, B8,B9, B10)
+Model <- rbind(
+  "Multinomial Logistic Regression","KNN(k=5)","KNN(k=6)","SVM(kernel=radial)","SVM(kernel=polynomial)","Classification Tree","Random Forest","Neural Networks","LDA","Esemble Model")
+Model_accuracy <- cbind(Model,B)
+colnames(Model_accuracy) <- c("Model", "Mean.Accuracy")
+show(Model_accuracy)
+
+# Different Sample Size Accuracy
+sample1<- round(mean(macc1.1, macc2.3, macc3.3, macc4.3, macc5.3, macc6.3, macc7.3, macc8.1, macc9.1, macc10.1),4)
+sample2<- round(mean(macc1.2, macc2.6, macc3.6, macc4.6, macc5.6, macc6.6, macc7.6, macc8.2, macc9.2, macc10.2),4)
+sample3 <- round(mean(macc1.3, macc2.9, macc3.9, macc4.9, macc5.9, macc6.9, macc7.9, macc8.3, macc9.3, macc10.3),4)
+sample_accuracy <- c(sample1, sample2, sample3)
+size <- c("sample1","sample2","sample3")
+sa <- cbind(size, sample_accuracy)
+show(sa)
+
