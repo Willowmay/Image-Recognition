@@ -36,3 +36,21 @@ where
 A is the proportion of the training rows that is utilized in the model. For instance, if we use 30,000 of the 60,000 rows, then A = 30,000 / 60,000 = 0.5; and
 
 B is the testing accuracy. This is the proportion of the predictions on the testing set that are correctly classified. For instance, if 9,000 of the 10,000 rows are correctly classified, then B = 9,000 / 10,000 = 0.9.
+
+I built 10 different classification models using machine learning techniques.
+
+(1) Multinomial Logistic Regression
+(2) K-Nearest Neighbors (k=5)
+(3) K-Nearest Neighbors (k=6)
+(4) Support Vector Machines (kernel="radial")
+(5) Support Vector Machines(kernel="polynomial")
+(6) Classification Tree
+(7) Random Forest
+(8) Neural Networks
+(9) Linear Discriminant Analysis
+(10) Ensemble Model
+
+
+
+
+
