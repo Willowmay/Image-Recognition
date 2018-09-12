@@ -37,7 +37,9 @@ A is the proportion of the training rows that is utilized in the model. For inst
 
 B is the testing accuracy. This is the proportion of the predictions on the testing set that are correctly classified. For instance, if 9,000 of the 10,000 rows are correctly classified, then B = 9,000 / 10,000 = 0.9.
 
-I built 10 different classification models using machine learning techniques.
+The goal is to have maximize B and minimize Points.
+
+I built 10 different classification models using machine learning techniques, in order to generate predictive classifications for an image recognition problem. The objective is to find the best model out of 10 to predict the pixels for identifying labels, which provides the type of fashionable product shown in the image. 
 
 (1) Multinomial Logistic Regression
 
