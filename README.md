@@ -40,15 +40,25 @@ B is the testing accuracy. This is the proportion of the predictions on the test
 I built 10 different classification models using machine learning techniques.
 
 (1) Multinomial Logistic Regression
+
 (2) K-Nearest Neighbors (k=5)
+
 (3) K-Nearest Neighbors (k=6)
+
 (4) Support Vector Machines (kernel="radial")
+
 (5) Support Vector Machines(kernel="polynomial")
+
 (6) Classification Tree
+
 (7) Random Forest
+
 (8) Neural Networks
+
 (9) Linear Discriminant Analysis
+
 (10) Ensemble Model
+
 
 
 
