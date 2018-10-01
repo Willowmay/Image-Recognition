@@ -1,6 +1,6 @@
 # Image-Recognition
 
-This project will focus on an image recognition problem. 
+This project focuses on an image recognition problem. 
 I will construct a variety of machine learning models with the goal of generating predictive classifications.
 
 The Data
